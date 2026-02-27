@@ -1,13 +1,12 @@
 import json
 import os
 
-# Получаем путь к папке, где лежит этот .py файл
 current_dir = os.path.dirname(__file__)
 
-# Формируем полный путь к sample-data.json
+
 file_path = os.path.join(current_dir, "sample-data.json")
 
-# Открываем JSON файл
+
 with open(file_path, "r", encoding="utf-8") as f:
     data = json.load(f)
 
