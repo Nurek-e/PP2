@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Nurbek",
+    "course": "1",
+    "students": [
+      "Nurali",
+      "Nurdaulet"
+    ]
+  },
+  {
+    "name": "Dauren",
+    "course": "2",
+    "students": [
+      "Abutalib",
+      "Almaz"
+    ]
+  },
+  {
+    "name": "Bekzhan",
+    "course": "3",
+    "students": [
+      "Nurkhat",
+      "Arnur"
+    ]
+  },
+  {
+    "name": "Nurasyl",
+    "course": "4",
+    "students": [
+      "Sake",
+      "Omar"
+    ]
+  }
+]
