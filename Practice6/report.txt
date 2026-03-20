@@ -1,0 +1,11 @@
+Total students: 9
+Average score: 85.66666666666667
+Highest score: 95
+Lowest score: 75
+
+Top students:
+Kuka 90
+Nurkhat 92
+Nurbek 88
+Nurali 95
+Daryn 87
