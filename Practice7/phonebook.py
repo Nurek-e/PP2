@@ -1,59 +1,35 @@
-import psycopg2
+from connect import get_connection
 import csv
-from config import load_config
+def show_contacts():
+    limit = 5
+    page = int(input("Enter page number: "))
+    offset = (page - 1) * limit
 
-
-def connect_db():
-    config = load_config()
-    conn = psycopg2.connect(**config)
-    return conn
-
-
-def create_table():
-    conn = connect_db()
+    conn = get_connection()
     cur = conn.cursor()
 
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS phonebook (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(100),
-            phone VARCHAR(20)
-        )
-    """)
+    cur.execute(
+        "SELECT * FROM phonebook ORDER BY id LIMIT %s OFFSET %s",
+        (limit, offset)
+    )
 
-    conn.commit()
+    rows = cur.fetchall()
+
+    if not rows:
+        print("No data")
+    else:
+        for row in rows:
+            print(row)
+
     cur.close()
     conn.close()
-    print("Table is ready!")
 
-
-def insert_from_csv():
-    conn = connect_db()
-    cur = conn.cursor()
-
-    with open("contacts.csv", "r", encoding="utf-8") as file:
-        reader = csv.reader(file)
-        for row in reader:
-            name = row[0]
-            phone = row[1]
-
-            cur.execute(
-                "INSERT INTO phonebook (name, phone) VALUES (%s, %s)",
-                (name, phone)
-            )
-
-    conn.commit()
-    cur.close()
-    conn.close()
-    print("Contacts imported from CSV!")
-
-
-def insert_from_console():
-    conn = connect_db()
-    cur = conn.cursor()
-
+def add_contact():
     name = input("Enter name: ")
     phone = input("Enter phone: ")
+
+    conn = get_connection()
+    cur = conn.cursor()
 
     cur.execute(
         "INSERT INTO phonebook (name, phone) VALUES (%s, %s)",
@@ -63,32 +39,16 @@ def insert_from_console():
     conn.commit()
     cur.close()
     conn.close()
+
     print("Contact added!")
 
 
-def show_contacts():
-    conn = connect_db()
-    cur = conn.cursor()
-
-    cur.execute("SELECT * FROM phonebook")
-    rows = cur.fetchall()
-
-    if len(rows) == 0:
-        print("No contacts found.")
-    else:
-        for row in rows:
-            print(row)
-
-    cur.close()
-    conn.close()
-
-
 def update_contact():
-    conn = connect_db()
-    cur = conn.cursor()
-
-    name = input("Enter the name of contact to update: ")
+    name = input("Enter name to update: ")
     new_phone = input("Enter new phone: ")
+
+    conn = get_connection()
+    cur = conn.cursor()
 
     cur.execute(
         "UPDATE phonebook SET phone = %s WHERE name = %s",
@@ -96,48 +56,26 @@ def update_contact():
     )
 
     conn.commit()
-
-    if cur.rowcount == 0:
-        print("Contact not found.")
-    else:
-        print("Contact updated!")
-
     cur.close()
     conn.close()
 
+    print("Updated!")
 
 def search_contact():
-    conn = connect_db()
+    value = input("Enter name or phone: ")
+
+    conn = get_connection()
     cur = conn.cursor()
 
-    print("1 - Search by exact name")
-    print("2 - Search by phone prefix")
-    choice = input("Choose option: ")
-
-    if choice == "1":
-        name = input("Enter name: ")
-        cur.execute(
-            "SELECT * FROM phonebook WHERE name = %s",
-            (name,)
-        )
-
-    elif choice == "2":
-        prefix = input("Enter phone prefix: ")
-        cur.execute(
-            "SELECT * FROM phonebook WHERE phone LIKE %s",
-            (prefix + "%",)
-        )
-
-    else:
-        print("Wrong option.")
-        cur.close()
-        conn.close()
-        return
+    cur.execute(
+        "SELECT * FROM phonebook WHERE name ILIKE %s OR phone LIKE %s",
+        ('%' + value + '%', '%' + value + '%')
+    )
 
     rows = cur.fetchall()
 
-    if len(rows) == 0:
-        print("No matching contacts found.")
+    if not rows:
+        print("Not found")
     else:
         for row in rows:
             print(row)
@@ -145,79 +83,76 @@ def search_contact():
     cur.close()
     conn.close()
 
-
 def delete_contact():
-    conn = connect_db()
+    value = input("Enter name or phone to delete: ")
+
+    conn = get_connection()
     cur = conn.cursor()
 
-    print("1 - Delete by name")
-    print("2 - Delete by phone")
-    choice = input("Choose option: ")
-
-    if choice == "1":
-        name = input("Enter name: ")
-        cur.execute(
-            "DELETE FROM phonebook WHERE name = %s",
-            (name,)
-        )
-
-    elif choice == "2":
-        phone = input("Enter phone: ")
-        cur.execute(
-            "DELETE FROM phonebook WHERE phone = %s",
-            (phone,)
-        )
-
-    else:
-        print("Wrong option.")
-        cur.close()
-        conn.close()
-        return
+    cur.execute(
+        "DELETE FROM phonebook WHERE name = %s OR phone = %s",
+        (value, value)
+    )
 
     conn.commit()
-
-    if cur.rowcount == 0:
-        print("Contact not found.")
-    else:
-        print("Contact deleted!")
-
     cur.close()
     conn.close()
 
+    print("Deleted!")
 
-def menu():
+
+def import_csv():
+    filename = input("Enter CSV file name: ")
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    with open(filename, "r", encoding="utf-8") as file:
+        reader = csv.reader(file)
+
+        for row in reader:
+            cur.execute(
+                "INSERT INTO phonebook (name, phone) VALUES (%s, %s)",
+                (row[0], row[1])
+            )
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    print("CSV imported!")
+
+
+def main():
     while True:
         print("\n--- PHONEBOOK MENU ---")
-        print("1 - Create table")
-        print("2 - Upload from CSV")
-        print("3 - Add from console")
-        print("4 - Show contacts")
-        print("5 - Update contact")
-        print("6 - Search contact")
-        print("7 - Delete contact")
-        print("0 - Exit")
+        print("1 - Show contacts (pagination)")
+        print("2 - Add contact")
+        print("3 - Update contact")
+        print("4 - Search contact")
+        print("5 - Delete contact")
+        print("6 - Import CSV")
+        print("7 - Exit")
 
-        choice = input("Select option: ")
+        choice = input("Choose: ")
 
         if choice == "1":
-            create_table()
-        elif choice == "2":
-            insert_from_csv()
-        elif choice == "3":
-            insert_from_console()
-        elif choice == "4":
             show_contacts()
-        elif choice == "5":
+        elif choice == "2":
+            add_contact()
+        elif choice == "3":
             update_contact()
-        elif choice == "6":
+        elif choice == "4":
             search_contact()
-        elif choice == "7":
+        elif choice == "5":
             delete_contact()
-        elif choice == "0":
-            print("Goodbye!")
+        elif choice == "6":
+            import_csv()
+        elif choice == "7":
             break
         else:
-            print("Wrong choice. Try again.")
+            print("Invalid choice")
 
 
-menu()
+if __name__ == "__main__":
+    main()
