@@ -8,7 +8,7 @@ def get_connection():
             database=database,
             user=user,
             password=password,
-            options="-c client_encoding=UTF8"   # 👈 ВОТ ЭТА СТРОКА
+            options="-c client_encoding=UTF8"
         )
         return conn
     except Exception as error:

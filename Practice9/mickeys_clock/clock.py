@@ -14,7 +14,6 @@ left = pygame.transform.scale(left, (120, 300))
 CENTER = (370, 280)
 
 
-# 🔥 КЛЮЧЕВАЯ ФУНКЦИЯ
 def rotate_center(image, angle, center):
     rotated = pygame.transform.rotate(image, angle)
     rect = rotated.get_rect(center=center)
@@ -31,11 +30,9 @@ def draw(screen):
     minute_angle = -minute * 6
     sec_angle = -sec * 6
 
-    # 🔥 СЕКРЕТ: сначала ставим руку в центр
     right_rect = right.get_rect(center=CENTER)
     left_rect = left.get_rect(center=CENTER)
 
-    # 🔥 потом вращаем от центра
     minute_img, minute_rect = rotate_center(right, minute_angle, CENTER)
     sec_img, sec_rect = rotate_center(left, sec_angle, CENTER)
 

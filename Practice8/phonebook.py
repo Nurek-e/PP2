@@ -4,14 +4,12 @@ from connect import get_connection
 def add_or_update(name, phone):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Calling the Upsert Procedure
             cur.execute("CALL upsert_contact(%s, %s)", (name, phone))
             conn.commit()
 
 def search(pattern):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Calling the Search Function
             cur.execute("SELECT * FROM get_contacts_by_pattern(%s)", (pattern,))
             for row in cur.fetchall():
                 print(row)
@@ -19,14 +17,12 @@ def search(pattern):
 def bulk_insert(names_list, phones_list):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Calling the Bulk Insert Procedure
             cur.execute("CALL bulk_insert_contacts(%s, %s)", (names_list, phones_list))
             conn.commit()
 
 def show_page(limit, offset):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Calling the Pagination Function
             cur.execute("SELECT * FROM get_contacts_paginated(%s, %s)", (limit, offset))
             for row in cur.fetchall():
                 print(row)
@@ -34,7 +30,6 @@ def show_page(limit, offset):
 def remove(identifier):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            # Calling the Delete Procedure
             cur.execute("CALL delete_contact_by_data(%s)", (identifier,))
             conn.commit()
 
@@ -63,7 +58,6 @@ def main():
                 print("Done!")
 
             elif choice == '3':
-                # Input via comma separation: e.g., "Ivan, Maria" and "8777, 8701"
                 names = input("Enter names (comma separated): ").replace(" ", "").split(",")
                 phones = input("Enter phones (comma separated): ").replace(" ", "").split(",")
                 if len(names) == len(phones):

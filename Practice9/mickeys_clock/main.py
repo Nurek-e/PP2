@@ -4,7 +4,7 @@ import pygame
 pygame.init()
 
 
-screen=pygame.display.set_mode((600,600))
+screen=pygame.display.set_mode((800,600))
 pygame.display.set_caption("Mickey Clock")
 
 fps=pygame.time.Clock()

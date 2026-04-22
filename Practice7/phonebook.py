@@ -24,7 +24,7 @@ def insert_from_csv(file_path):
     try:
         with open(file_path, mode='r', encoding='utf-8') as f:
             reader = csv.reader(f)
-            next(reader) # Skip header
+            next(reader) 
             with conn.cursor() as cur:
                 cur.executemany(
                     "INSERT INTO contacts (first_name, last_name, phone_number) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
