@@ -259,6 +259,7 @@ def run_game():
         is_over = game.run_frame()
 
         if is_over:
+            pygame.mixer.Sound("assets/crash.wav").play()
             state = "game_over"
 
         pygame.display.update()

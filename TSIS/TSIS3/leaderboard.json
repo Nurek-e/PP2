@@ -1,9 +1,33 @@
 [
     {
+        "name": "fd",
+        "score": 940,
+        "distance": 3002,
+        "coins": 10
+    },
+    {
+        "name": "Nut",
+        "score": 895,
+        "distance": 3000,
+        "coins": 13
+    },
+    {
+        "name": "\u043e\u0434",
+        "score": 870,
+        "distance": 3000,
+        "coins": 9
+    },
+    {
         "name": "Nureke",
         "score": 840,
         "distance": 3000,
         "coins": 10
+    },
+    {
+        "name": "rgt",
+        "score": 835,
+        "distance": 3000,
+        "coins": 9
     },
     {
         "name": "Nureke",
@@ -12,39 +36,27 @@
         "coins": 9
     },
     {
+        "name": "\u0434\u043b",
+        "score": 810,
+        "distance": 3000,
+        "coins": 8
+    },
+    {
+        "name": "fd",
+        "score": 800,
+        "distance": 3002,
+        "coins": 11
+    },
+    {
+        "name": "\u043e\u0434",
+        "score": 477,
+        "distance": 1829,
+        "coins": 15
+    },
+    {
         "name": "khj",
         "score": 421,
         "distance": 2761,
         "coins": 6
-    },
-    {
-        "name": "khj",
-        "score": 273,
-        "distance": 1738,
-        "coins": 3
-    },
-    {
-        "name": "Nureke",
-        "score": 243,
-        "distance": 1332,
-        "coins": 5
-    },
-    {
-        "name": "Nureke",
-        "score": 238,
-        "distance": 1286,
-        "coins": 5
-    },
-    {
-        "name": "Nureke",
-        "score": 157,
-        "distance": 871,
-        "coins": 5
-    },
-    {
-        "name": "Nureke",
-        "score": 93,
-        "distance": 484,
-        "coins": 2
     }
 ]

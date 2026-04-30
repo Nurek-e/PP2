@@ -9,6 +9,13 @@ from game import load_settings, save_settings
 
 pygame.init()
 
+pygame.mixer.init()
+
+pygame.mixer.music.load("assets/t1.mp3")
+pygame.mixer.music.set_volume(0.5)
+
+
+
 setup_database()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -189,7 +196,7 @@ def leaderboard_screen():
 
 def settings_screen():
     global state
-
+    pygame.mixer.music.stop()
     settings = load_settings()
 
     grid_btn = Button(160, 180, 280, 50, "")
@@ -233,6 +240,11 @@ def settings_screen():
             if sound_btn.clicked(event):
                 settings["sound"] = not settings["sound"]
 
+                if settings["sound"]:
+                    pygame.mixer.music.unpause()
+                else:
+                    pygame.mixer.music.pause()
+
             if color_btn.clicked(event):
                 current = colors.index(settings["snake_color"])
                 settings["snake_color"] = colors[(current + 1) % len(colors)]
@@ -247,6 +259,8 @@ def settings_screen():
 
 def game_over_screen():
     global state, game
+
+    
 
     retry = Button(190, 390, 220, 55, "Retry")
     menu = Button(190, 470, 220, 55, "Main Menu")
@@ -276,6 +290,7 @@ def game_over_screen():
                 state = "game"
 
             if menu.clicked(event):
+                pygame.mixer.music.stop()
                 state = "menu"
 
         pygame.display.flip()
@@ -283,7 +298,15 @@ def game_over_screen():
 
 
 def run_game():
+
     global state, game
+
+    # ▶️ старт музыки
+    if load_settings()["sound"]:
+        pygame.mixer.music.load("assets/t1.mp3")
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
+
 
     game = SnakeGame(screen, username)
 
@@ -291,6 +314,7 @@ def run_game():
         over = game.run_frame()
 
         if over:
+            pygame.mixer.music.stop()   
             state = "game_over"
 
         pygame.display.flip()
